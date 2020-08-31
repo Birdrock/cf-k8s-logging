@@ -3,6 +3,11 @@
 system_domain: ""
 system_namespace: ""
 
+fluentd:
+  prometheus:
+    path: '/metrics'
+    port: '24231'
+
 images:
   log_cache:
   syslog_server:

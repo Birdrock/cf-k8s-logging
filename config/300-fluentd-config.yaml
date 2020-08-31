@@ -6,6 +6,7 @@ metadata:
   name: fluentd-config
   namespace: #@ data.values.system_namespace
 data:
+  #@yaml/text-templated-strings
   fluentd.conf: |
     # Inputs
     <source>
@@ -34,6 +35,22 @@ data:
         </pattern>
       </parse>
       read_from_head true
+    </source>
+
+    # expose metrics in prometheus format
+    <source>
+      @type prometheus
+      bind 0.0.0.0
+      port (@= data.values.fluentd.prometheus.port @)
+      metrics_path (@= data.values.fluentd.prometheus.path @)
+    </source>
+
+    <source>
+      @type prometheus_output_monitor
+      interval 10
+      <labels>
+        hostname ${hostname}
+      </labels>
     </source>
 
     # Filters
